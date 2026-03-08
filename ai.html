@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI最新技術概念まとめ | チーム共有ノート</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --sidebar-bg: #f7f6f3;
+    --border: #e9e9e7;
+    --text-primary: #1a1a1a;
+    --text-secondary: #6b6b6b;
+    --text-muted: #9b9b9b;
+    --accent: #2383e2;
+    --accent-light: #e8f1fc;
+    --tag-bg: #f1f1ef;
+    --tag-text: #5a5a5a;
+    --callout-bg: #f7f6f3;
+    --callout-border: #d3d3d0;
+    --table-header: #f7f6f3;
+    --table-border: #e9e9e7;
+    --highlight-yellow: #fef3cd;
+    --highlight-blue: #e8f1fc;
+    --highlight-green: #e8f5e9;
+    --highlight-red: #fde8e8;
+    --highlight-purple: #f3e8fd;
+    --code-bg: #f7f6f3;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 15px;
+    line-height: 1.75;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 240px;
+    min-width: 240px;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-header {
+    padding: 0 16px 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+
+  .workspace-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .workspace-icon {
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+  }
+
+  .sidebar-nav {
+    padding: 0 8px;
+    flex: 1;
+  }
+
+  .nav-section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 8px 8px 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: background 0.1s;
+  }
+
+  .nav-item:hover { background: rgba(0,0,0,0.05); }
+  .nav-item.active { background: rgba(35,131,226,0.08); color: var(--accent); font-weight: 500; }
+
+  .nav-icon { font-size: 14px; width: 18px; text-align: center; }
+
+  /* Main content */
+  .main {
+    flex: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 96px 120px;
+    width: 100%;
+  }
+
+  /* Page header */
+  .page-emoji {
+    font-size: 60px;
+    margin-bottom: 16px;
+    display: block;
+    line-height: 1;
+  }
+
+  .page-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+
+  .page-meta {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    background: var(--tag-bg);
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--tag-text);
+    font-weight: 500;
+  }
+
+  .tag.blue { background: var(--highlight-blue); color: #1a65c2; }
+  .tag.green { background: var(--highlight-green); color: #2d6a2d; }
+  .tag.purple { background: var(--highlight-purple); color: #6a2d9b; }
+
+  /* Content blocks */
+  h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 26px;
+    font-weight: 700;
+    margin: 48px 0 16px;
+    color: var(--text-primary);
+    line-height: 1.4;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  h1::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 22px;
+    background: var(--accent);
+    border-radius: 2px;
+    flex-shrink: 0;
+    position: relative;
+    top: 2px;
+  }
+
+  h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 28px 0 10px;
+    color: var(--text-primary);
+  }
+
+  h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 20px 0 8px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 12px;
+  }
+
+  p {
+    margin-bottom: 12px;
+    color: var(--text-primary);
+  }
+
+  /* Divider */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+
+  /* Callout */
+  .callout {
+    background: var(--callout-bg);
+    border: 1px solid var(--callout-border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin: 16px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .callout.blue { background: var(--highlight-blue); border-color: #b8d4f5; }
+  .callout.yellow { background: var(--highlight-yellow); border-color: #f5dcb8; }
+  .callout.green { background: var(--highlight-green); border-color: #b8ddb8; }
+  .callout.purple { background: var(--highlight-purple); border-color: #ddb8f5; }
+  .callout.red { background: var(--highlight-red); border-color: #f5b8b8; }
+
+  .callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.6; }
+
+  .callout-content { font-size: 14px; line-height: 1.7; }
+
+  .callout-content strong { font-weight: 700; }
+
+  /* Table */
+  .table-wrapper {
+    overflow-x: auto;
+    margin: 16px 0;
+    border: 1px solid var(--table-border);
+    border-radius: 6px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  thead tr {
+    background: var(--table-header);
+  }
+
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--table-border);
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--table-border);
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafafa; }
+
+  /* Concept card */
+  .concept-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 20px 0;
+    overflow: hidden;
+    transition: box-shadow 0.15s;
+  }
+
+  .concept-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  }
+
+  .card-header {
+    padding: 16px 20px;
+    background: var(--tag-bg);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .card-emoji { font-size: 22px; }
+
+  .card-title-group { flex: 1; }
+
+  .card-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .card-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .card-body {
+    padding: 16px 20px;
+  }
+
+  .card-body p {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .card-body p:last-child { margin-bottom: 0; }
+
+  .analogy-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--highlight-yellow);
+    border: 1px solid #f5dcb8;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #7a5800;
+    margin-bottom: 10px;
+  }
+
+  /* Bullet list */
+  .notion-list {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 16px;
+  }
+
+  .notion-list li {
+    position: relative;
+    padding: 3px 0 3px 22px;
+    font-size: 14px;
+    color: var(--text-primary);
+  }
+
+  .notion-list li::before {
+    content: '•';
+    position: absolute;
+    left: 6px;
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  /* Numbered list */
+  .notion-numlist {
+    list-style: none;
+    counter-reset: num;
+    padding: 0;
+    margin: 8px 0 16px;
+  }
+
+  .notion-numlist li {
+    counter-increment: num;
+    position: relative;
+    padding: 3px 0 3px 28px;
+    font-size: 14px;
+  }
+
+  .notion-numlist li::before {
+    content: counter(num) '.';
+    position: absolute;
+    left: 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    width: 24px;
+    text-align: right;
+  }
+
+  /* Inline code */
+  code {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 13px;
+    font-family: 'SF Mono', 'Consolas', monospace;
+  }
+
+  /* Quote */
+  .quote-block {
+    border-left: 3px solid var(--text-primary);
+    padding: 4px 16px;
+    margin: 12px 0;
+    color: var(--text-secondary);
+    font-style: italic;
+    font-size: 15px;
+  }
+
+  /* Toggle / summary */
+  details {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin: 8px 0;
+    overflow: hidden;
+  }
+
+  summary {
+    padding: 12px 16px;
+    background: var(--tag-bg);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+  }
+
+  summary::before { content: '▶'; font-size: 10px; color: var(--text-muted); }
+  details[open] summary::before { content: '▼'; }
+
+  .details-body {
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--text-primary);
+  }
+
+  /* Comparison grid */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .compare-item {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+  }
+
+  .compare-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  .compare-item.vs-a .compare-label { color: var(--accent); }
+  .compare-item.vs-b .compare-label { color: #e25a23; }
+
+  .compare-item p { font-size: 13px; margin-bottom: 0; color: var(--text-secondary); }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+    margin: 16px 0;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: var(--border);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 16px;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 7px;
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+
+  .timeline-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .timeline-body {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  /* Highlight text */
+  mark {
+    background: #fff3b0;
+    padding: 1px 3px;
+    border-radius: 2px;
+  }
+
+  .text-accent { color: var(--accent); font-weight: 600; }
+
+  /* Footer */
+  .page-footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* TOC */
+  .toc {
+    background: var(--sidebar-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 0 0 40px;
+    font-size: 13px;
+  }
+
+  .toc-title {
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .toc a {
+    display: block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 3px 0;
+    transition: color 0.1s;
+  }
+
+  .toc a:hover { color: var(--accent); }
+  .toc a.indent { padding-left: 16px; font-size: 12px; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { padding: 40px 24px 80px; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .page-title { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="workspace-name">
+      <div class="workspace-icon">🤖</div>
+      チーム AI ノート
+    </div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-section-title">ページ</div>
+    <a href="#top" class="nav-item active"><span class="nav-icon">📄</span> AI概念まとめ</a>
+    <a href="#opening" class="nav-item"><span class="nav-icon">📝</span> はじめに</a>
+    <a href="#concepts" class="nav-item"><span class="nav-icon">💡</span> 7つの概念</a>
+    <a href="#comparison" class="nav-item"><span class="nav-icon">⚖️</span> 比較表</a>
+    <a href="#case" class="nav-item"><span class="nav-icon">🚀</span> 実践事例</a>
+    <a href="#summary" class="nav-item"><span class="nav-icon">✅</span> まとめ</a>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="main" id="top">
+
+  <!-- Page header -->
+  <span class="page-emoji">🤖</span>
+  <h1 class="page-title" style="font-size:36px; margin-top:0; border-left:none; padding-left:0;">Prompt・Agent・Skill・MCP・<br>Claude Code の違いとは？<br><span style="font-size:22px; font-weight:400; color:#6b6b6b;">平易な言葉で一気に全部わかる</span></h1>
+
+  <div class="page-meta">
+    <div class="meta-item">📅 2026年3月8日</div>
+    <div class="meta-item">👤 ESS システムソリューショングループ</div>
+    <span class="tag blue">チーム共有</span>
+    <span class="tag green">AI最新動向</span>
+    <span class="tag purple">入門ガイド</span>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">目次</div>
+    <a href="#opening">📝 はじめに</a>
+    <a href="#overview">📊 全体像：対応表</a>
+    <a href="#concepts">💡 7つの概念を詳しく解説</a>
+    <a class="indent" href="#llm">└ 大モデル（LLM）</a>
+    <a class="indent" href="#prompt">└ Prompt（プロンプト）</a>
+    <a class="indent" href="#agent">└ Agent（エージェント）</a>
+    <a class="indent" href="#skill">└ Skill（スキル）</a>
+    <a class="indent" href="#mcp">└ MCP</a>
+    <a class="indent" href="#ide">└ IDE（Cursor / Trae）</a>
+    <a class="indent" href="#claudecode">└ Claude Code / OpenCode</a>
+    <a href="#comparison">⚖️ 混同しやすい概念の比較</a>
+    <a href="#case">🚀 実践事例：20分で完成した技術調査レポート</a>
+    <a href="#summary">✅ まとめ・2026年のAI活用の本質</a>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Opening -->
+  <section id="opening">
+    <h1>📝 はじめに</h1>
+
+    <div class="callout blue">
+      <span class="callout-icon">💬</span>
+      <div class="callout-content">
+        <p>AIの進化のスピードは、誰もが肌で感じているはずです。少し前まで、「AIに対してどう質問すればいいか」が最重要スキルでした。しかし今、その時代はすでに静かに幕を閉じています。AIを取り巻く新技術・新コンセプト・新用語が、かつてないスピードで次々と登場し、業界の境界は数ヶ月ごとに塗り替えられています。</p>
+        <p>このような状況の中で、<strong>ポジションや担当分野を問わず、積極的に学び、時代のスピードに追いつくことは、もはや"プラスα"ではなく"必須回答"</strong> になっています。流行を追いかけるためではなく、この波に乗り遅れないために。</p>
+        <p>本ノートでは、AIの世界に最近登場した重要な概念や新興技術を体系的に整理しています。細部の全てを深掘りする必要はありません。まずは基本的な認識の枠組みを作り、これらの言葉を見たときに「知ってる」と感じられるようになる——そこを目標としています。</p>
+        <p>本資料が、AIの新しい世界を探索する <strong>入口</strong> となれば幸いです。</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Overview -->
+  <section id="overview">
+    <h1>📊 全体像：対応表</h1>
+    <p>まず全体を俯瞰するために、<mark>「自分が会社を立ち上げた」</mark> という比喩で考えてみましょう。</p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>技術概念</th>
+            <th>会社の中の役割</th>
+            <th>ひとことで言うと</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>大モデル（LLM）</strong></td>
+            <td>🧠 天才社員</td>
+            <td>頭脳明晰だが、入社初日</td>
+          </tr>
+          <tr>
+            <td><strong>Prompt</strong></td>
+            <td>🗣️ 口頭での指示</td>
+            <td>一時的で、言ったら消える</td>
+          </tr>
+          <tr>
+            <td><strong>Agent</strong></td>
+            <td>⚡ 自律的に動く状態</td>
+            <td>指示待ちから、自分で考えて動く</td>
+          </tr>
+          <tr>
+            <td><strong>Skill</strong></td>
+            <td>📋 SOPマニュアル</td>
+            <td>再利用可能な専門知識パッケージ</td>
+          </tr>
+          <tr>
+            <td><strong>MCP</strong></td>
+            <td>🔑 入館証（IDカード）</td>
+            <td>外部システムへの標準アクセスパス</td>
+          </tr>
+          <tr>
+            <td><strong>IDE（Cursor / Trae）</strong></td>
+            <td>🏢 スマートオフィス</td>
+            <td>AI が既に座っているオフィス環境</td>
+          </tr>
+          <tr>
+            <td><strong>Claude Code / OpenCode</strong></td>
+            <td>🪖 特殊部隊・現場直行モード</td>
+            <td>オフィス不要、ターミナルで直接作業</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Concepts -->
+  <section id="concepts">
+    <h1>💡 7つの概念を詳しく解説</h1>
+
+    <!-- LLM -->
+    <div class="concept-card" id="llm">
+      <div class="card-header">
+        <span class="card-emoji">🧠</span>
+        <div class="card-title-group">
+          <div class="card-title">大モデル（LLM）= 天才社員</div>
+          <div class="card-subtitle">GPT / Claude / DeepSeek / Gemini など</div>
+        </div>
+        <span class="tag">基礎</span>
+      </div>
+      <div class="card-body">
+        <div class="analogy-badge">🏢 比喩：入社したばかりの天才社員</div>
+        <p>大モデル（LLM：Large Language Model）は、あなたが採用した <strong>天才社員</strong> だと思ってください。</p>
+        <ul class="notion-list">
+          <li>頭脳明晰で、文書作成も、コード修正も、詩作でもこなせる</li>
+          <li>しかし、今日が入社初日——あなたの会社のルールや流儀を知らない</li>
+          <li>最大の問題はIQではなく、「社内のやり方を知らない」こと</li>
+        </ul>
+        <div class="callout yellow">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">後続の全ての概念（Prompt / Skill / Agent / MCP）は本質的に同じ問題を解決しています：<strong>この天才社員を、本当に自社の人間にするにはどうすればいいか。</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prompt -->
+    <div class="concept-card" id="prompt">
+      <div class="card-header">
+        <span class="card-emoji">🗣️</span>
+        <div class="card-title-group">
+          <div class="card-title">Prompt（プロンプト）= 口頭での指示</div>
+          <div class="card-subtitle">一番直接的なAIとのコミュニケーション</div>
+        </div>
+        <span class="tag">基礎</span>
+      </div>
+      <div class="card-body">
+        <div class="analogy-badge">🏢 比喩：デスクに行って直接話しかける</div>
+        <p>あなたが社員のそばに行って、直接こう言います：</p>
+        <ul class="notion-list">
+          <li>「この企画書を書いて」</li>
+          <li>「トーンはプロフェッショナルに」</li>
+          <li>「形容詞を減らして、シンプルに」</li>
+        </ul>
+        <p>この「その場で言った言葉」が Prompt です。</p>
+        <div class="compare-grid">
+          <div class="compare-item vs-a">
+            <div class="compare-label">✅ 強み</div>
+            <p>即時性が高い・柔軟に使える</p>
+          </div>
+          <div class="compare-item vs-b">
+            <div class="compare-label">⚠️ 弱み</div>
+            <p>一時的・翌日には覚えていない</p>
+          </div>
+        </div>
+        <div class="callout">
+          <span class="callout-icon">📌</span>
+          <div class="callout-content"><strong>2026年の視点：</strong> Promptは「消えた」のではなく、<mark>「表舞台から裏方へ」移行しました。</mark> Agent が動くたびに自動生成される Prompt が裏で稼働しています。心臓が見えなくても動いているように。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agent -->
+    <div class="concept-card" id="agent">
+      <div class="card-header">
+        <span class="card-emoji">⚡</span>
+        <div class="card-title-group">
+          <div class="card-title">Agent（エージェント）= 自律的に動く状態</div>
+          <div class="card-subtitle">目標を与えると自分で完遂するモード</div>
+        </div>
+        <span class="tag blue">重要</span>
+      </div>
+      <div class="card-body">
+        <div class="analogy-badge">🏢 比喩：会議中に自分で調べて仕上げてくる社員</div>
+        <p>「競合分析レポートを作っておいて」と言って会議に行ったら、2時間後に完成版が届いていた——それが Agent です。</p>
+        <ul class="notion-list">
+          <li>自分でタスクを分解する</li>
+          <li>自分でステップを計画する</li>
+          <li>自分でツールを呼び出す</li>
+          <li>自分で結果を確認して修正する</li>
+        </ul>
+        <div class="callout blue">
+          <span class="callout-icon">⚡</span>
+          <div class="callout-content">
+            <strong>以前のAI：</strong> あなたが一歩言えば一歩動く（あなたが監督）<br>
+            <strong>Agent モード：</strong> 目標を与えたら最後まで自分でやり遂げる（AIが自律）
+          </div>
+        </div>
+        <div class="callout yellow">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content"><strong>注意：</strong> Agent は製品名ではありません。「Agentをダウンロードする」とは言いません。<strong>Agentは動作モード（働き方）です。</strong> Manus / Devin / Claude Code など多くのツールがAgent能力を持っています。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skill -->
+    <div class="concept-card" id="skill">
+      <div class="card-header">
+        <span class="card-emoji">📋</span>
+        <div class="card-title-group">
+          <div class="card-title">Skill（スキル）= SOPマニュアル</div>
+          <div class="card-subtitle">再利用可能な専門知識パッケージ</div>
+        </div>
+        <span class="tag blue">重要</span>
+      </div>
+      <div class="card-body">
+        <div class="analogy-badge">🏢 比喩：会社の業務マニュアル（SOP）</div>
+        <p>社員の仕事が毎回バラバラにならないよう、<strong>標準手順書（SOP）</strong> を作って渡したようなものです：</p>
+        <ul class="notion-list">
+          <li>標準フロー：「競合分析の手順はステップ1から4まで…」</li>
+          <li>テンプレート：「資料のフォーマットはこの通り」</li>
+          <li>参考事例：「過去の優秀な成果物をここに格納」</li>
+          <li>補助スクリプト：「データ整理はこのスクリプトで一発」</li>
+        </ul>
+
+        <h2>Prompt vs Skill の違い</h2>
+        <div class="compare-grid">
+          <div class="compare-item vs-a">
+            <div class="compare-label">Prompt</div>
+            <p>口頭の一時指示。言ったら消える。毎回言い直す必要がある。</p>
+          </div>
+          <div class="compare-item vs-b">
+            <div class="compare-label">Skill</div>
+            <p>書き下ろしたマニュアル。棚に置けばいつでも参照できる。<strong>再利用可能。</strong></p>
+          </div>
+        </div>
+
+        <div class="callout green">
+          <span class="callout-icon">🌟</span>
+          <div class="callout-content"><strong>ポイント：</strong> Skill のライブラリが充実するほど、AIは「ベテラン社員」に近づきます。あなたが積み上げた Skill が多ければ多いほど、<mark>AIの成果物の品質は安定し、効率は少なくとも3倍以上</mark> になります。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCP -->
+    <div class="concept-card" id="mcp">
+      <div class="card-header">
+        <span class="card-emoji">🔑</span>
+        <div class="card-title-group">
+          <div class="card-title">MCP = 入館証（IDカード）</div>
+          <div class="card-subtitle">Model Context Protocol｜外部システムへの標準アクセス</div>
+        </div>
+        <span class="tag purple">技術仕様</span>
+      </div>
+      <div class="card-body">
+        <div class="analogy-badge">🏢 比喩：社員証（マスターキー）</div>
+        <p>能力も方法もある社員が、社内のシステムに入れない——そのために入館証を発行しました：</p>
+        <ul class="notion-list">
+          <li>🗄️ データベースのドアを開く → 履歴データを照会</li>
+          <li>👥 CRMのドアを開く → 顧客情報を確認</li>
+          <li>💻 コードリポジトリのドアを開く → 最新コードを取得</li>
+          <li>🔍 検索エンジンのドアを開く → リアルタイム情報を調べる</li>
+        </ul>
+
+        <div class="callout">
+          <span class="callout-icon">📡</span>
+          <div class="callout-content">
+            <strong>現在のMCP対応サービス（2026年2月時点）：1,000以上</strong><br>
+            GitHub / Slack / Notion / Figma など主要ツールが対応済み
+          </div>
+        </div>
+
+        <h2>Skill vs MCP の違い</h2>
+        <div class="compare-grid">
+          <div class="compare-item vs-a">
+            <div class="compare-label">Skill</div>
+            <p>「どう仕事するか」を教える → <strong>能力・方法論</strong></p>
+          </div>
+          <div class="compare-item vs-b">
+            <div class="compare-label">MCP</div>
+            <p>「どこに入れるか」を与える → <strong>権限・アクセス</strong></p>
+          </div>
+        </div>
+        <div class="callout red">
+          <span class="callout-icon">🔒</span>
+          <div class="callout-content">Skill がなければ、データがあっても分析できない。MCP がなければ、方法があってもデータが取れない。<strong>両方が必要です。</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IDE -->
+    <div class="concept-card" id="ide">
+      <div class="card-header">
+        <span class="card-emoji">🏢</span>
+        <div class="card-title-group">
+          <div class="card-title">IDE（Cursor / Trae）= AIが既に座っているオフィス</div>
+          <div class="card-subtitle">統合開発環境の進化形</div>
+        </div>
+        <span class="tag">ツール</span>
+      </div>
+      <div class="card-body">
+        <div class="analogy-badge">🏢 比喩：入った瞬間AIが隣にいるスマートオフィス</div>
+        <p>昔のIDEは「普通のオフィス」——机と椅子はあるが、自分で全部やる。</p>
+        <p><strong>今のAI IDE</strong> は、ドアを開けたらもうAIが隣に座っていて：コードを書けば補完してくれ、バグが出れば分析してくれ、リファクタリングを頼めば修正してくれます。</p>
+
+        <h2>主要AI IDEの比較</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>ツール名</th>
+                <th>特徴</th>
+                <th>おすすめ度</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Cursor</strong></td>
+                <td>現在最も人気のAI IDE。VS Codeとほぼ同じUIで、Agent mode搭載</td>
+                <td>⭐⭐⭐⭐⭐</td>
+              </tr>
+              <tr>
+                <td><strong>Trae</strong></td>
+                <td>ByteDance製。無料枠が手厚い</td>
+                <td>⭐⭐⭐⭐</td>
+              </tr>
+              <tr>
+                <td><strong>Windsurf</strong></td>
+                <td>Codeium製。AI IDE陣営の一員</td>
+                <td>⭐⭐⭐</td>
+              </tr>
+              <tr>
+                <td><strong>VS Code</strong></td>
+                <td>Microsoftの定番エディタ。Agent機能は限定的だが、安定性・拡張性は最高クラス</td>
+                <td>⭐⭐⭐</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout yellow">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content"><strong>選び方のポイント：</strong> 広告で選ばない。<mark>「そのAgentが本当に自律的に動けるか、その成果物をそのまま使えるか」</mark> が唯一の判断基準。日常の開発の80%はCursorかTraeでカバーできます。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Claude Code -->
+    <div class="concept-card" id="claudecode">
+      <div class="card-header">
+        <span class="card-emoji">🪖</span>
+        <div class="card-title-group">
+          <div class="card-title">Claude Code / OpenCode = 現場直行の特殊部隊</div>
+          <div class="card-subtitle">ターミナルで直接動くAIエージェント</div>
+        </div>
+        <span class="tag purple">上級者向け</span>
+      </div>
+      <div class="card-body">
+        <div class="analogy-badge">🏢 比喩：オフィス不要、現場でそのまま作業する特殊部隊</div>
+        <p>IDEのAIが「オフィスの白カラー社員」なら、Claude Code / OpenCode は「工事現場で直接手を動かす特殊部隊」です。</p>
+        <ul class="notion-list">
+          <li>GUIは不要——ターミナル（コマンドライン）だけで動く</li>
+          <li>ファイルシステムを直接読み書き・コマンド実行・スクリプト実行</li>
+          <li>プロジェクト全体の構造を一気に理解できる</li>
+          <li>複数のAgentを並行で走らせることも可能</li>
+        </ul>
+
+        <h2>Claude Code vs OpenCode</h2>
+        <div class="compare-grid">
+          <div class="compare-item vs-a">
+            <div class="compare-label">Claude Code</div>
+            <p>Anthropic公式製品。Claudeモデルのみ対応。iOS（iPhoneのような閉じた体験）</p>
+          </div>
+          <div class="compare-item vs-b">
+            <div class="compare-label">OpenCode</div>
+            <p>オープンソース。Claude / GPT / DeepSeek / Geminiなど75種以上対応。Android（自由にカスタム）</p>
+          </div>
+        </div>
+        <div class="callout">
+          <span class="callout-icon">📌</span>
+          <div class="callout-content">成果物の品質は大差なし。選び方は「どのモデルに慣れているか」だけで決めて大丈夫です。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Comparison -->
+  <section id="comparison">
+    <h1>⚖️ 混同しやすい概念の比較</h1>
+
+    <details open>
+      <summary>🤔 「Skill と Prompt は同じじゃないの？」</summary>
+      <div class="details-body">
+        <div class="compare-grid">
+          <div class="compare-item vs-a">
+            <div class="compare-label">Prompt</div>
+            <p>その場の口頭指示。一回限り。翌日には覚えていない。</p>
+          </div>
+          <div class="compare-item vs-b">
+            <div class="compare-label">Skill</div>
+            <p>文書化されたマニュアル。棚に置けていつでも参照できる。<strong>再利用可能。</strong></p>
+          </div>
+        </div>
+        <p>一言でいえば：<code>Prompt = 一時指示</code> / <code>Skill = 再利用可能な専門知識パッケージ</code></p>
+      </div>
+    </details>
+
+    <details>
+      <summary>🤔 「MCP と Skill は両方とも AI に機能を追加するんじゃないの？」</summary>
+      <div class="details-body">
+        <p>よくある誤解です。</p>
+        <ul class="notion-list">
+          <li><strong>Skill</strong>：「どうやって仕事するか」を教える → 能力・方法論</li>
+          <li><strong>MCP</strong>：「どこに入れるか」を与える → 権限・アクセス手段</li>
+        </ul>
+        <p>競合分析を例にすると：Skill は「競合分析の方法論」を提供し、MCP は「競合データが置いてあるデータベースへのアクセス権」を提供します。どちらが欠けても仕事は完成しません。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>🤔 「Claude Code と Cursor の IDE の違いは？」</summary>
+      <div class="details-body">
+        <div class="compare-grid">
+          <div class="compare-item vs-a">
+            <div class="compare-label">IDE（Cursor など）</div>
+            <p>グラフィカルなオフィスで仕事。どのファイルを変更したか目で見える。</p>
+          </div>
+          <div class="compare-item vs-b">
+            <div class="compare-label">Claude Code</div>
+            <p>ターミナルから直接ファイルシステムを操作。GUI不要。複数Agentの並行実行が得意。</p>
+          </div>
+        </div>
+        <p>どちらも仕事は完成させられます。複雑なシナリオでは、現場直行型の方が「感覚が鋭く、反応が速い」ことがあります。</p>
+      </div>
+    </details>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Case study -->
+  <section id="case">
+    <h1>🚀 実践事例：20分で完成した技術調査レポート</h1>
+
+    <div class="callout blue">
+      <span class="callout-icon">📌</span>
+      <div class="callout-content">以下は、これらの概念が実際に連携して動いた実例です。全ての要素が噛み合ったとき何が起きるか、感じてください。</div>
+    </div>
+
+    <p><strong>タスク：</strong> 新プロジェクトのための完全な技術選定レポートを作成（5つのフレームワークを比較）</p>
+    <p><strong>以前のやり方：</strong> 十数個のWebサイトを手動で閲覧、メモ、比較表作成、分析記述、整形 → <mark>最低2〜3日</mark></p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-title">🪖 Claude Code 起動（特殊部隊が現場へ）</div>
+        <div class="timeline-body">ターミナルを開き、目標を1つ指定：「この5つのフレームワークの技術選定レポートを作って」</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">⚡ Agent モードに突入（自律的に動き始める）</div>
+        <div class="timeline-body">自分でタスクを分解し、計画を立て、実行開始</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">🔑 MCP → GitHub 接続（入館証を使ってデータ取得）</div>
+        <div class="timeline-body">各フレームワークの最新コードとStarデータを取得</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">🔑 MCP → 検索エンジン接続（最新コミュニティ動向も調査）</div>
+        <div class="timeline-body">過去3ヶ月のコミュニティ議論の熱量データを取得</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">📋 Skill 「技術選定分析」を参照（SOPに従って比較実行）</div>
+        <div class="timeline-body">事前に作成した標準フローに沿って分析を進める</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">✅ 完成！（所要時間：約20分）</div>
+        <div class="timeline-body">データ表・比較図・結論・推奨事項を含む完全なレポートが手元に</div>
+      </div>
+    </div>
+
+    <div class="callout purple">
+      <span class="callout-icon">🎯</span>
+      <div class="callout-content">
+        <strong>これは「AIが少し時間を節約してくれた」のではありません。</strong><br>
+        大モデルの能力 × Agentの自律性 × Skillの方法論 × MCPの接続力——4つの歯車が噛み合ったとき、<mark>効率の次元そのものが変わります。</mark><br><br>
+        これは「仕事が少し速くなった」ではなく、<strong>「仕事のやり方が再定義された」</strong>ということです。
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Summary -->
+  <section id="summary">
+    <h1>✅ まとめ・2026年のAI活用の本質</h1>
+
+    <h2>7つの概念 最終整理</h2>
+    <ol class="notion-numlist">
+      <li><strong>大モデル（LLM）</strong>：全ての土台。頭脳明晰な天才社員だが、初日は会社のことを知らない</li>
+      <li><strong>Prompt</strong>：最もシンプルな指示手段。一時的だが今も裏方として機能している</li>
+      <li><strong>Agent</strong>：目標を与えたら最後まで自律的にやり遂げるモード（製品名ではなく働き方）</li>
+      <li><strong>Skill</strong>：再利用可能なSOPマニュアル。蓄積するほどAIはベテラン化する</li>
+      <li><strong>MCP</strong>：外部システムへの標準アクセス手段。現在1000以上のサービスが対応</li>
+      <li><strong>IDE（Cursor/Trae）</strong>：AIが既に常駐しているスマートな開発環境</li>
+      <li><strong>Claude Code / OpenCode</strong>：GUIなしでターミナルから直接動く、上級者向けAIエージェント</li>
+    </ol>
+
+    <div class="callout blue">
+      <span class="callout-icon">🌊</span>
+      <div class="callout-content">
+        <strong>2026年のAI活用における最大の優位性は、「技術に詳しいこと」ではありません。</strong><br><br>
+        <mark>これらの概念を使って、自分の働き方を再定義できるかどうか。</mark><br><br>
+        全部を完璧に習得する必要はありません。それぞれが「どこに位置し、何の問題を解決するか」を理解した上で、必要なときに正しいツールを、正しい方法で使える——それが今求められることです。<br><br>
+        AIの世界は、一つの概念の独演ではなく、<strong>交響楽団全体の演奏です。そして、まだ始まったばかりです。</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- Page footer -->
+  <div class="page-footer">
+    <p>© 2026 ESS システムソリューショングループ. All rights reserved.</p>
+  </div>
+
+</main>
+</body>
+</html>
